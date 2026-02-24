@@ -98,6 +98,12 @@ _goto_resolve_db()
     fi
   fi
 
+  # Resolve through symlinks so --convert and --sync-home write to the real file
+  # -f is used over --canonicalize for portability (macOS compatibility)
+  if [ -e "$GOTO_DB" ]; then
+    GOTO_DB=$(readlink -f "$GOTO_DB")
+  fi
+
   GOTO_DB_CONFIG_DIRNAME=$(dirname "$GOTO_DB")
   if [[ ! -d "$GOTO_DB_CONFIG_DIRNAME" ]]; then
     mkdir -p "$GOTO_DB_CONFIG_DIRNAME"
